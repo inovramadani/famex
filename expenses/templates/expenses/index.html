@@ -1,0 +1,28 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'expenses/style.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<div id="app" data="{{ user }}">
+	<h1>${ title }</h1>
+	<p>User = ${ firstname } ${ lastname }</p>
+</div>
+
+<script>
+	new Vue({
+		delimiters: ['${', '}'],
+		el: '#app',
+		data: {
+			title: 'Home page of expenses',
+			user: {},
+			firstname: '',
+			lastname: ''
+		},
+		mounted() {
+			this.user = JSON.parse(document.getElementById('app').getAttribute('data') || '{}')
+			this.firstname = this.user[0].fields.firstname
+			this.lastname = this.user[0].fields.lastname
+		}
+	})
+
+</script>

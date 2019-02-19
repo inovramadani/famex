@@ -1,27 +1,53 @@
 {% load static %}
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="{% static 'expenses/style.css' %}">
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
-<div id="app" data="{{ user }}">
+<div id="expense-page">
 	<h1>${ title }</h1>
-	<p>User = ${ firstname } ${ lastname }</p>
+	<p><strong>User</strong></p>
+	<p>${ firstname } ${ lastname }</p>
+	<p><strong>Expenses </strong></p>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Time</th>
+				<th>Detail</th>
+			</tr>
+		</thead>
+		<tbody class="table-striped">
+			<tr v-for="expense in expenses">
+				<td>${expense.date}</td>
+				<td>${expense.time}</td>
+				<td>${expense.detail}</td>
+		</tbody>
+	</table>
 </div>
 
 <script>
+	let expenses = {{ expenses | safe }}
+	let user = {{ user | safe }}
+
 	new Vue({
 		delimiters: ['${', '}'],
-		el: '#app',
+		el: '#expense-page',
 		data: {
 			title: 'Home page of expenses',
-			user: {},
-			firstname: '',
-			lastname: ''
+			expenses: expenses.map(expense => {
+				const date = new Date(expense.fields.date)
+				return ({
+					date: date.toLocaleDateString(),
+					time: date.toLocaleTimeString(),
+					detail: expense.fields.expense_detail,
+				})
+			}),
+			firstname: user[0].fields.firstname,
+			lastname: user[0].fields.lastname,
 		},
 		mounted() {
-			this.user = JSON.parse(document.getElementById('app').getAttribute('data') || '{}')
-			this.firstname = this.user[0].fields.firstname
-			this.lastname = this.user[0].fields.lastname
+			
 		}
 	})
 

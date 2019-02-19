@@ -1,13 +1,17 @@
 {% load static %}
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+<link rel="stylesheet" type="text/css" href="{% static 'expenses/bootstrap.min.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'expenses/style.css' %}">
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="{% static 'expenses/vue.min.js' %}"></script>
 
 <div id="expense-page">
-	<h1>${ title }</h1>
-	<p><strong>User</strong></p>
-	<p>${ firstname } ${ lastname }</p>
+	<h5>Hi, ${ firstname } ${ lastname }</h5>
+	<p><strong>Balance</strong></p>
+	<div v-for="item in Object.keys(balance)">
+		<span>${item}</span><pre style="display: inline">		${balance[item]}</pre>
+	</div>
+	<br>
 	<p><strong>Expenses </strong></p>
 	<table class="table">
 		<thead>
@@ -26,15 +30,19 @@
 	</table>
 </div>
 
+<script src="{% static 'expenses/lodash.min.js' %}"></script>
 <script>
-	let expenses = {{ expenses | safe }}
 	let user = {{ user | safe }}
+	let expenses = {{ expenses | safe }}
+	let balance = {{ balance | safe }}
 
 	new Vue({
 		delimiters: ['${', '}'],
 		el: '#expense-page',
 		data: {
-			title: 'Home page of expenses',
+			firstname: user[0].fields.firstname,
+			lastname: user[0].fields.lastname,
+			balance: _.omit(balance[0].fields, ['user']),
 			expenses: expenses.map(expense => {
 				const date = new Date(expense.fields.date)
 				return ({
@@ -43,12 +51,10 @@
 					detail: expense.fields.expense_detail,
 				})
 			}),
-			firstname: user[0].fields.firstname,
-			lastname: user[0].fields.lastname,
 		},
 		mounted() {
-			
+
 		}
 	})
-
 </script>
+<script src="{% static 'expenses/bootstrap.min.js' %}"></script>

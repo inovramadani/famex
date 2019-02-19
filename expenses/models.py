@@ -17,3 +17,13 @@ class Expense(models.Model):
 
 	def __str__(self):
 		return self.expense_detail
+
+class Balance(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	income = models.IntegerField(default=0)
+	expense = models.IntegerField(default=0)
+	rest = models.IntegerField(default=0)
+	saving = models.IntegerField(default=0)
+
+	def __str__(self):
+		return str(self.rest)

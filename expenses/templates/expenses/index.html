@@ -1,61 +1,63 @@
+{% extends "base.html" %}
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'expenses/bootstrap.min.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'expenses/style.css' %}">
-<script src="{% static 'expenses/vue.min.js' %}"></script>
+{% block content %}
+	<body>
+		<div id="expense-page">
+			<h5>Hi, ${ firstname } ${ lastname }</h5>
+			<i class="fas fa-user-circle" style="font-size: 40px"></i>
+			<p><strong>Balance</strong></p>
+			<div v-for="item in Object.keys(balance)">
+				<span>${item}</span><pre style="display: inline">		${balance[item]}</pre>
+			</div>
+			<br>
+			<p><strong>Expenses </strong></p>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Time</th>
+						<th>Detail</th>
+					</tr>
+				</thead>
+				<tbody class="table-striped">
+					<tr v-for="expense in expenses">
+						<td>${expense.date}</td>
+						<td>${expense.time}</td>
+						<td>${expense.detail}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
-<div id="expense-page">
-	<h5>Hi, ${ firstname } ${ lastname }</h5>
-	<p><strong>Balance</strong></p>
-	<div v-for="item in Object.keys(balance)">
-		<span>${item}</span><pre style="display: inline">		${balance[item]}</pre>
-	</div>
-	<br>
-	<p><strong>Expenses </strong></p>
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Date</th>
-				<th>Time</th>
-				<th>Detail</th>
-			</tr>
-		</thead>
-		<tbody class="table-striped">
-			<tr v-for="expense in expenses">
-				<td>${expense.date}</td>
-				<td>${expense.time}</td>
-				<td>${expense.detail}</td>
-		</tbody>
-	</table>
-</div>
+		<script src="{% static 'expenses/lodash.min.js' %}"></script>
+		<script>
+			let user = {{ user | safe }}
+			let expenses = {{ expenses | safe }}
+			let balance = {{ balance | safe }}
 
-<script src="{% static 'expenses/lodash.min.js' %}"></script>
-<script>
-	let user = {{ user | safe }}
-	let expenses = {{ expenses | safe }}
-	let balance = {{ balance | safe }}
+			new Vue({
+				delimiters: ['${', '}'],
+				el: '#expense-page',
+				data: {
+					firstname: user[0].fields.firstname,
+					lastname: user[0].fields.lastname,
+					balance: _.omit(balance[0].fields, ['user']),
+					expenses: expenses.map(expense => {
+						const date = new Date(expense.fields.date)
+						return ({
+							date: date.toLocaleDateString(),
+							time: date.toLocaleTimeString(),
+							detail: expense.fields.expense_detail,
+						})
+					}),
+				},
+				mounted() {
 
-	new Vue({
-		delimiters: ['${', '}'],
-		el: '#expense-page',
-		data: {
-			firstname: user[0].fields.firstname,
-			lastname: user[0].fields.lastname,
-			balance: _.omit(balance[0].fields, ['user']),
-			expenses: expenses.map(expense => {
-				const date = new Date(expense.fields.date)
-				return ({
-					date: date.toLocaleDateString(),
-					time: date.toLocaleTimeString(),
-					detail: expense.fields.expense_detail,
-				})
-			}),
-		},
-		mounted() {
+				}
+			})
+		</script>
+	</body>
+{% endblock %}
 
-		}
-	})
-</script>
-<link rel="stylesheet" type="text/css" href="{% static 'expenses/all.min.css' %}">
-<script src="{% static 'expenses/all.min.js' %}"></script>
-<script src="{% static 'expenses/bootstrap.min.js' %}"></script>
+		

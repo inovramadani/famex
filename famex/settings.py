@@ -53,6 +53,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'famex.urls'
 
+STATIC_ROOT = os.path.join(BASE_DIR, "allstaticfiles")
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

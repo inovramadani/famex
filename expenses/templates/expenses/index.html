@@ -4,7 +4,10 @@
 {% block title %} Expenses detail {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{% static 'expenses/style.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'expenses/style.css' %}">
+	<script src="{% static 'expenses/lodash.min.js' %}"></script>
+	<script src="{% static 'expenses/numeral.min.js' %}"></script>
+
 	<div id="expense-page">
 
 		<i class="fas fa-bars float-left"></i>
@@ -27,6 +30,9 @@
 			</div>
 		</div>
 
+		<!-- This is vue component -->
+		<blog-post title="Take a note your daily expenses here!"></blog-post>
+
 		<p><strong>Expenses </strong></p>
 		<table class="table">
 			<thead>
@@ -47,15 +53,15 @@
 
 
 	</div>
-
-	<script src="{% static 'expenses/lodash.min.js' %}"></script>
-	<script src="{% static 'expenses/numeral.min.js' %}"></script>
+	
+	<!-- Load vue component like this -->
+	<script src="{% static 'expenses/components/blogpost.vue' %}"></script>
 	<script>
 		let user = {{ user | safe }}
 		let expenses = {{ expenses | safe }}
 		let balance = {{ balance | safe }}
 
-		new Vue({
+		let vm = new Vue({
 			delimiters: ['${', '}'],
 			el: '#expense-page',
 			data: {
@@ -72,6 +78,9 @@
 					})
 				}),
 			},
+			components: {
+				blogpost,
+			},
 			mounted() {
 
 			}
@@ -81,6 +90,7 @@
 			return word.charAt(0).toUpperCase() + word.slice(1)
 		}
 
+		
 	</script>
 {% endblock %}
 

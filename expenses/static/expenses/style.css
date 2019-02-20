@@ -2,6 +2,40 @@ body {
 	margin: 20px 50px;
 }
 
+.title {
+	width: 100%;
+	text-align: center;
+}
+
+.title .title-text {
+	line-height: 1;	
+}
+
+.user-balance-container {
+	margin: 20px 0;
+}
+
+.user-balance-container .balance {
+	display: flex;
+	justify-content: space-between;
+}
+
+.balance .balance-item {
+	display: inline-block;
+	width: 50%;
+}
+
+.balance .currency-sign {
+	display: inline-block;
+	width: 5%;
+}
+
+.balance .balance-value {
+	display: inline-block;
+	width: 30%;
+	text-align: right;
+}
+
 @media screen and (max-width: 420px) {
 	body {
 		margin: 20px;

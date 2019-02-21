@@ -18,24 +18,74 @@
 		
 		<div class="row user-balance-container">
 			<div class="col-6 no-padding">
-				<h5>Hi, ${ firstname }</h5>
+				<h5>Hi, ${firstname}</h5>
 				<i class="fas fa-user-circle" style="font-size: 40px"></i>
 			</div>
 			<div class="col-6 no-padding">
-				<div>
-					<balance-detail 
-						v-for="item in Object.keys(balance)"
-						:item="item"
-						:currency="currency"
-						:balance="balanceText"></balance-detail>
-				</div>
+				<balance-detail 
+					v-for="item in Object.keys(balance)"
+					:item="item"
+					:currency="currency"
+					:balance="balanceText"></balance-detail>
 			</div>
 		</div>
 
-		<!-- This is vue component -->
-		<blog-post title="Take a note your daily expenses here!"></blog-post>
+		<div class="btn-group btn-group-toggle" data-toggle="buttons">
+		  <label class="btn" :class="[ inputType === 'expense' ? 'btn-success' : 'btn-light' ]">
+		    <input type="radio" 
+		    	name="options" 
+		    	value="expense"
+		    	:checked="inputType === 'expense'"
+		    	@change="changeInputType($event)"
+		    > 
+		    Expense
+		  </label>
+		  <label class="btn" :class="[ inputType === 'income' ? 'btn-success' : 'btn-light' ]">
+		    <input type="radio" 
+		    	name="options"
+		    	value="income"
+		    	:checked="inputType === 'income'"
+					@change="changeInputType($event)"
+		    > 
+		    Income
+		  </label>
+		</div>
 
-		<p><strong>Expenses </strong></p>
+		<div v-if="inputType === 'expense'" 
+			class="row record-input no-padding">
+			<record-input
+				id="Category" 
+				label="Category" 
+				type="dropdown" 
+				v-bind:items="categoryItems"></record-input>
+			<record-input
+				id="For" 
+				label="For" 
+				type="string"></record-input>
+			<record-input
+				id="Place" 
+				label="Place" 
+				type="string"></record-input>
+			<record-input
+				id="Amount" 
+				label="Amount" 
+				type="currency"
+				:currency="currency"></record-input>
+		</div>
+		<div v-else-if="inputType === 'income'"
+			class="row record-input no-padding">
+			<record-input
+				id="From" 
+				label="From" 
+				type="string"></record-input>
+			<record-input
+				id="Amount" 
+				label="Amount" 
+				type="currency"
+				:currency="currency"></record-input>
+		</div>
+		
+		<br><br><br>
 		<table class="table">
 			<thead>
 				<tr>
@@ -87,14 +137,11 @@
 			},
 			components: {
 				BalanceDetail,
+				RecordInput,
 			},
 			methods: {
-				changeInputType: function () {
-					if (this.inputType === 'expense') {
-						this.inputType = 'income'
-					} else {
-						this.inputType = 'expense'
-					}
+				changeInputType: function (event) {
+					this.inputType = event.target.value
 				}
 			},
 			mounted() {

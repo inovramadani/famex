@@ -36,6 +36,38 @@ body {
 	text-align: right;
 }
 
+#expense-page .record-input {
+	display: flex;
+	flex-flow: column;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+.record-input .label-input {
+	display: inline-block;
+	width: 30%;
+}
+
+.record-input .input-text {
+	display: inline-block;
+	width: 68%;
+}
+
+.record-input .input-text > input {
+	width: 100%;
+}
+
+.input-text > .input-group {
+	display: flex;
+	flex-flow: row;
+	width: 100%;
+}
+
+.input-text > .input-group > input {
+	flex-grow: 1;
+}
+
+
 @media screen and (max-width: 420px) {
 	body {
 		margin: 20px;

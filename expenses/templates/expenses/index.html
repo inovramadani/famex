@@ -22,10 +22,12 @@
 				<i class="fas fa-user-circle" style="font-size: 40px"></i>
 			</div>
 			<div class="col-6 no-padding">
-				<div v-for="item in Object.keys(balance)" class="balance">
-					<span class="balance-item">${capitalizeFirstLetter(item)}</span>
-					<span class="currency-sign">${currencySign}</span>
-					<span class="balance-value">${numeral(balance[item]).format('0,0')}</span>
+				<div>
+					<balance-detail 
+						v-for="item in Object.keys(balance)"
+						:item="item"
+						:currency="currency"
+						:balance="balanceText"></balance-detail>
 				</div>
 			</div>
 		</div>
@@ -55,11 +57,13 @@
 	</div>
 	
 	<!-- Load vue component like this -->
-	<script src="{% static 'expenses/components/blogpost.vue' %}"></script>
+	<script src="{% static 'expenses/components/BalanceDetail.vue' %}"></script>
+	<script src="{% static 'expenses/components/RecordInput.vue' %}"></script>
 	<script>
-		let user = {{ user | safe }}
-		let expenses = {{ expenses | safe }}
-		let balance = {{ balance | safe }}
+		const user = {{ user | safe }}
+		const expenses = {{ expenses | safe }}
+		const balance = {{ balance | safe }}
+		const newBalance = _.omit(balance[0].fields, ['user', 'currency'])
 
 		let vm = new Vue({
 			delimiters: ['${', '}'],
@@ -67,8 +71,11 @@
 			data: {
 				firstname: capitalizeFirstLetter(user[0].fields.firstname),
 				lastname: capitalizeFirstLetter(user[0].fields.lastname),
-				currencySign: balance[0].fields.currency,
-				balance: _.omit(balance[0].fields, ['user', 'currency']),
+				currency: balance[0].fields.currency,
+				balance: newBalance,
+				balanceText: numberValuesToStringWithThousandsSeparator(newBalance),
+				inputType: 'expense',
+				categoryItems: ['food', 'clean', 'transport'],
 				expenses: expenses.map(expense => {
 					const date = new Date(expense.fields.date)
 					return ({
@@ -79,17 +86,38 @@
 				}),
 			},
 			components: {
-				blogpost,
+				BalanceDetail,
+			},
+			methods: {
+				changeInputType: function () {
+					if (this.inputType === 'expense') {
+						this.inputType = 'income'
+					} else {
+						this.inputType = 'expense'
+					}
+				}
 			},
 			mounted() {
 
 			}
 		})
 
-		function capitalizeFirstLetter(word) {
+		function capitalizeFirstLetter (word) {
 			return word.charAt(0).toUpperCase() + word.slice(1)
 		}
 
+		function numberValuesToStringWithThousandsSeparator (object) {
+			return Object.keys(object).reduce(function(obj, key) {
+				const value = object[key]
+				if (typeof value === 'number') {
+					return {
+						...obj,
+						[key] : numeral(object[key]).format('0,0')
+					}
+				}
+				return obj
+			}, {})
+		}
 		
 	</script>
 {% endblock %}

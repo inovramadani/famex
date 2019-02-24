@@ -51,6 +51,10 @@
 		  </label>
 		</div>
 
+		<div class="float-right input-group-sm">
+			<input type="date" id="date-picker" class="form-control">
+		</div>
+
 		<div v-if="inputType === 'expense'" 
 			class="row record-input no-padding">
 			<record-input
@@ -147,7 +151,8 @@
 				}
 			},
 			mounted() {
-
+				let date = new Date()
+				document.getElementById('date-picker').value = formatDate(date)
 			}
 		})
 
@@ -166,6 +171,18 @@
 				}
 				return obj
 			}, {})
+		}
+
+		function formatDate(date) {
+		    let d = new Date(date),
+		        month = '' + (d.getMonth() + 1),
+		        day = '' + d.getDate(),
+		        year = d.getFullYear()
+
+		    if (month.length < 2) month = '0' + month;
+		    if (day.length < 2) day = '0' + day;
+
+		    return [year, month, day].join('-');
 		}
 		
 	</script>

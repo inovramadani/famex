@@ -95,7 +95,10 @@
 				:currency="currency"></record-input>
 		</div>
 
-		<span class="btn-floating btn-lg btn-success btn-circle float-right"><i class="fas fa-plus"></i></span>
+		<span class="btn-floating btn-lg btn-success btn-circle float-right"
+			@click="addRecord">
+			<i class="fas fa-plus"></i>
+		</span>
 		
 		<br><br><br>
 		<table class="table">
@@ -133,6 +136,7 @@
 			delimiters: ['${', '}'],
 			el: '#expense-page',
 			data: {
+				userId: user[0].pk,
 				firstname: capitalizeFirstLetter(user[0].fields.firstname),
 				lastname: capitalizeFirstLetter(user[0].fields.lastname),
 				currency: balance[0].fields.currency,
@@ -163,8 +167,16 @@
 				RecordInput,
 			},
 			methods: {
-				changeInputType: function (event) {
+				changeInputType (event) {
 					this.input.type = event.target.value
+				},
+				addRecord () {
+					const { date, category, detail, place, amount } = this.input
+					const data = { date, category, detail, place, amount, user: this.userId }
+					console.log('data = ', data)
+					axios.post('/api/expense/', data)
+						.then(res => console.log(res))
+						.catch(err => console.log(err))
 				}
 			},
 			mounted() {

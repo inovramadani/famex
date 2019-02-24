@@ -31,20 +31,20 @@
 		</div>
 
 		<div class="btn-group btn-group-toggle" data-toggle="buttons">
-		  <label class="btn btn-sm" :class="[ inputType === 'expense' ? 'btn-success' : 'btn-light' ]">
+		  <label class="btn btn-sm" :class="[ input.type === 'expense' ? 'btn-success' : 'btn-light' ]">
 		    <input type="radio" 
 		    	name="options" 
 		    	value="expense"
-		    	:checked="inputType === 'expense'"
+		    	:checked="input.type === 'expense'"
 		    	@change="changeInputType($event)"
 		    > 
 		    Expense
 		  </label>
-		  <label class="btn btn-sm" :class="[ inputType === 'income' ? 'btn-success' : 'btn-light' ]">
+		  <label class="btn btn-sm" :class="[ input.type === 'income' ? 'btn-success' : 'btn-light' ]">
 		    <input type="radio" 
 		    	name="options"
 		    	value="income"
-		    	:checked="inputType === 'income'"
+		    	:checked="input.type === 'income'"
 					@change="changeInputType($event)"
 		    > 
 		    Income
@@ -55,37 +55,43 @@
 			<input type="date" id="date-picker" class="form-control">
 		</div>
 
-		<div v-if="inputType === 'expense'" 
+		<div v-if="input.type === 'expense'" 
 			class="row record-input no-padding">
 			<record-input
 				id="Category" 
 				label="Category" 
 				type="dropdown" 
-				v-bind:items="categoryItems"></record-input>
+				v-model="input.category"
+				:items="categoryItems"></record-input>
 			<record-input
 				id="For" 
 				label="For" 
+				v-model="input.detail"
 				type="string"></record-input>
 			<record-input
 				id="Place" 
 				label="Place" 
+				v-model="input.place"
 				type="string"></record-input>
 			<record-input
 				id="Amount" 
 				label="Amount" 
 				type="currency"
+				v-model="input.amount"
 				:currency="currency"></record-input>
 		</div>
-		<div v-else-if="inputType === 'income'"
+		<div v-else-if="input.type === 'income'"
 			class="row record-input no-padding">
 			<record-input
 				id="From" 
 				label="From" 
+				v-model="input.detail"
 				type="string"></record-input>
 			<record-input
 				id="Amount" 
 				label="Amount" 
 				type="currency"
+				v-model="input.amount"
 				:currency="currency"></record-input>
 		</div>
 
@@ -132,7 +138,6 @@
 				currency: balance[0].fields.currency,
 				balance: newBalance,
 				balanceText: numberValuesToStringWithThousandsSeparator(newBalance),
-				inputType: 'expense',
 				categoryItems: ['food', 'clean', 'transport'],
 				expenses: expenses.map(expense => {
 					const date = new Date(expense.fields.date)
@@ -144,6 +149,13 @@
 						amount: expense.fields.amount,
 					})
 				}),
+				input: {
+					type: 'expense',
+					category: '',
+					detail: '',
+					place: '',
+					amount: '',
+				},
 			},
 			components: {
 				BalanceDetail,
@@ -151,12 +163,15 @@
 			},
 			methods: {
 				changeInputType: function (event) {
-					this.inputType = event.target.value
+					this.input['type'] = event.target.value
 				}
 			},
 			mounted() {
 				let date = new Date()
 				document.getElementById('date-picker').value = formatDate(date)
+			},
+			updated() {
+				console.log(this.input)
 			}
 		})
 

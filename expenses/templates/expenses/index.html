@@ -96,15 +96,17 @@
 			<thead>
 				<tr>
 					<th>Date</th>
-					<th>Time</th>
-					<th>Detail</th>
+					<th>For</th>
+					<th>Place</th>
+					<th>Amount</th>
 				</tr>
 			</thead>
 			<tbody class="table-striped">
 				<tr v-for="expense in expenses">
 					<td>${expense.date}</td>
-					<td>${expense.time}</td>
 					<td>${expense.detail}</td>
+					<td>${expense.place}</td>
+					<td>${expense.amount}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -136,8 +138,10 @@
 					const date = new Date(expense.fields.date)
 					return ({
 						date: date.toLocaleDateString(),
-						time: date.toLocaleTimeString(),
-						detail: expense.fields.expense_detail,
+						category: expense.fields.category,
+						detail: expense.fields.detail,
+						place: expense.fields.place,
+						amount: expense.fields.amount,
 					})
 				}),
 			},

@@ -12,11 +12,14 @@ class User(models.Model):
 
 class Expense(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	date = models.DateTimeField()
-	expense_detail = models.TextField()
+	date = models.DateField()
+	category = models.TextField(default='')
+	detail = models.TextField(default='')
+	place = models.TextField(default='')
+	amount = models.FloatField(default=0.0)
 
 	def __str__(self):
-		return self.expense_detail
+		return self.detail
 
 class Balance(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)

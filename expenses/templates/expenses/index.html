@@ -52,7 +52,7 @@
 		</div>
 
 		<div class="float-right input-group-sm">
-			<input type="date" id="date-picker" class="form-control">
+			<input type="date" id="date-picker" class="form-control" v-model="input.date">
 		</div>
 
 		<div v-if="input.type === 'expense'" 
@@ -151,6 +151,7 @@
 				}),
 				input: {
 					type: 'expense',
+					date: formatDate(new Date()),
 					category: '',
 					detail: '',
 					place: '',
@@ -167,8 +168,7 @@
 				}
 			},
 			mounted() {
-				let date = new Date()
-				document.getElementById('date-picker').value = formatDate(date)
+				document.getElementById('date-picker').value = formatDate(new Date())
 			},
 			updated() {
 				console.log(this.input)

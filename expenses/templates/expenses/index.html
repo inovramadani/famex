@@ -107,7 +107,7 @@
 					<th>Date</th>
 					<th>For</th>
 					<th>Place</th>
-					<th>Amount</th>
+					<th>${currency}</th>
 				</tr>
 			</thead>
 			<tbody class="table-striped">
@@ -171,12 +171,22 @@
 					this.input.type = event.target.value
 				},
 				addRecord () {
-					const { date, category, detail, place, amount } = this.input
-					const data = { date, category, detail, place, amount, user: this.userId }
-					console.log('data = ', data)
-					axios.post('/api/expense/', data)
-						.then(res => console.log(res))
-						.catch(err => console.log(err))
+					const { date, category, detail, place, amount, type } = this.input
+
+					if (type === 'expense') {
+						const data = { date, category, detail, place, amount, user: this.userId }
+						
+						axios.post('/api/expense/', data)
+							.then(res => console.log(res))
+							.catch(err => console.log(err))
+					} 
+					else if (type === 'income') {
+						const data = { date, detail, amount, user: this.userId }
+						
+						axios.post('/api/income/', data)
+							.then(res => console.log(res))
+							.catch(err => console.log(err))
+					}
 				}
 			},
 			mounted() {

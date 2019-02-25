@@ -10,6 +10,17 @@ class User(models.Model):
     def __str__(self):
     	return self.firstname
 
+class Balance(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	currency = models.CharField(max_length=3, default='$')
+	income = models.IntegerField(default=0)
+	expense = models.IntegerField(default=0)
+	rest = models.IntegerField(default=0)
+	saving = models.IntegerField(default=0)
+
+	def __str__(self):
+		return str(self.rest)
+
 class Expense(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	date = models.DateField()
@@ -21,13 +32,11 @@ class Expense(models.Model):
 	def __str__(self):
 		return self.detail
 
-class Balance(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	currency = models.CharField(max_length=3, default='$')
-	income = models.IntegerField(default=0)
-	expense = models.IntegerField(default=0)
-	rest = models.IntegerField(default=0)
-	saving = models.IntegerField(default=0)
+class Income(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	date = models.DateField()
+	detail = models.TextField(default='')
+	amount = models.FloatField(default=0.0)
 
 	def __str__(self):
-		return str(self.rest)
+		return self.detail

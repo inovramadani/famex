@@ -182,7 +182,7 @@
 					} 
 					else if (type === 'income') {
 						const data = { date, detail, amount, user: this.userId }
-						
+						console.log(data)
 						axios.post('/api/income/', data)
 							.then(res => console.log(res))
 							.catch(err => console.log(err))

@@ -178,6 +178,8 @@
 						{ icon: 'home', text: 'Home', link: `/${this.userId}` },
 						{ icon: 'money-bill', text: 'Income', link: `/income/${this.userId}` },
 						{ icon: 'cart-plus', text: 'Expense', link: `/expenses/${this.userId}` },
+						{ icon: 'piggy-bank', text: 'Saving', link: `/saving/${this.userId}` },
+						{ icon: 'credit-card', text: 'Debt', link: `/debt/${this.userId}` },
 						{ icon: 'newspaper', text: 'Newsfeed', link: `/newsfeed/${this.userId}` },
 						{ icon: 'user', text: 'User Profile', link: `/user/${this.userId}` },
 						{ icon: 'cog', text: 'Settings', link: `/settings/${this.userId}` },
@@ -186,8 +188,8 @@
 				setMenuItems () {
 					return [
 						{ icon: 'file-alt', text: 'Category', link: `/category/${this.userId}` },
-						{ icon: 'balance-scale', text: 'Allocation', link: `/allocation/${this.userId}` },
-						{ icon: 'wallet', text: 'Saving Target', link: `/saving/${this.userId}` },
+						{ icon: 'chart-pie', text: 'Allocation', link: `/allocation/${this.userId}` },
+						{ icon: 'wallet', text: 'Saving Target', link: `/saving-target/${this.userId}` },
 						{ icon: 'calendar-check', text: 'Payment Reminder', link: `/payment/${this.userId}` },
 					]
 				}

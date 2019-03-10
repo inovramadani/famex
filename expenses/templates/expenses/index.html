@@ -10,122 +10,128 @@
 
 	<div id="expense-page">
 
-		<i class="fas fa-bars float-left"></i>
-		<i class="fas fa-ellipsis-v float-right"></i>
+		<side-menu id="sidemenu" :items="menuItems" :onright="false"></side-menu>
+		<side-menu id="setmenu" :items="setMenuItems" :onright="true"></side-menu>
+
+		<span @click="openSidemenu('sidemenu')"><i class="fas fa-bars float-left"></i></span>
+		<span @click="openSidemenu('setmenu')"><i class="fas fa-ellipsis-v float-right"></i></span>
 		<div class="title">
 			<strong class="title-text">FAMEX</strong>
 		</div>
-		
-		<div class="row user-balance-container">
-			<div class="col-6 no-padding">
-				<h5>Hi, ${firstname}</h5>
-				<i class="fas fa-user-circle" style="font-size: 40px"></i>
+
+		<div class="main" @click="closeSidemenu">
+			<div id="background_menu_overlay"></div>
+
+			<div class="row user-balance-container">
+				<div class="col-6 no-padding">
+					<h5>Hi, ${firstname}</h5>
+					<i class="fas fa-user-circle" style="font-size: 40px"></i>
+				</div>
+				<div class="col-6 no-padding">
+					<balance-detail 
+						v-for="item in Object.keys(balance)"
+						:item="item"
+						:currency="currency"
+						:balance="balanceText"></balance-detail>
+				</div>
 			</div>
-			<div class="col-6 no-padding">
-				<balance-detail 
-					v-for="item in Object.keys(balance)"
-					:item="item"
-					:currency="currency"
-					:balance="balanceText"></balance-detail>
+
+			<div class="btn-group btn-group-toggle" data-toggle="buttons">
+			  <label class="btn btn-sm" :class="[ input.type === 'expense' ? 'btn-success' : 'btn-light' ]">
+			    <input type="radio" 
+			    	name="options" 
+			    	value="expense"
+			    	:checked="input.type === 'expense'"
+			    	@change="changeInputType($event)"
+			    > 
+			    Expense
+			  </label>
+			  <label class="btn btn-sm" :class="[ input.type === 'income' ? 'btn-success' : 'btn-light' ]">
+			    <input type="radio" 
+			    	name="options"
+			    	value="income"
+			    	:checked="input.type === 'income'"
+						@change="changeInputType($event)"
+			    > 
+			    Income
+			  </label>
 			</div>
-		</div>
 
-		<div class="btn-group btn-group-toggle" data-toggle="buttons">
-		  <label class="btn btn-sm" :class="[ input.type === 'expense' ? 'btn-success' : 'btn-light' ]">
-		    <input type="radio" 
-		    	name="options" 
-		    	value="expense"
-		    	:checked="input.type === 'expense'"
-		    	@change="changeInputType($event)"
-		    > 
-		    Expense
-		  </label>
-		  <label class="btn btn-sm" :class="[ input.type === 'income' ? 'btn-success' : 'btn-light' ]">
-		    <input type="radio" 
-		    	name="options"
-		    	value="income"
-		    	:checked="input.type === 'income'"
-					@change="changeInputType($event)"
-		    > 
-		    Income
-		  </label>
-		</div>
+			<div class="float-right input-group-sm">
+				<input type="date" id="date-picker" class="form-control" v-model="input.date">
+			</div>
 
-		<div class="float-right input-group-sm">
-			<input type="date" id="date-picker" class="form-control" v-model="input.date">
-		</div>
+			<div v-if="input.type === 'expense'" 
+				class="row record-input no-padding">
+				<record-input
+					id="Category" 
+					label="Category" 
+					type="dropdown" 
+					v-model="input.category"
+					:items="categoryItems"></record-input>
+				<record-input
+					id="For" 
+					label="For" 
+					v-model="input.detail"
+					type="string"></record-input>
+				<record-input
+					id="Place" 
+					label="Place" 
+					v-model="input.place"
+					type="string"></record-input>
+				<record-input
+					id="Amount" 
+					label="Amount" 
+					type="currency"
+					v-model="input.amount"
+					:currency="currency"></record-input>
+			</div>
+			<div v-else-if="input.type === 'income'"
+				class="row record-input no-padding">
+				<record-input
+					id="From" 
+					label="From" 
+					v-model="input.detail"
+					type="string"></record-input>
+				<record-input
+					id="Amount" 
+					label="Amount" 
+					type="currency"
+					v-model="input.amount"
+					:currency="currency"></record-input>
+			</div>
 
-		<div v-if="input.type === 'expense'" 
-			class="row record-input no-padding">
-			<record-input
-				id="Category" 
-				label="Category" 
-				type="dropdown" 
-				v-model="input.category"
-				:items="categoryItems"></record-input>
-			<record-input
-				id="For" 
-				label="For" 
-				v-model="input.detail"
-				type="string"></record-input>
-			<record-input
-				id="Place" 
-				label="Place" 
-				v-model="input.place"
-				type="string"></record-input>
-			<record-input
-				id="Amount" 
-				label="Amount" 
-				type="currency"
-				v-model="input.amount"
-				:currency="currency"></record-input>
+			<span class="btn-floating btn-lg btn-success btn-circle float-right"
+				@click="addRecord">
+				<i class="fas fa-plus"></i>
+			</span>
+			
+			<br><br><br>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>For</th>
+						<th>Place</th>
+						<th>${currency}</th>
+					</tr>
+				</thead>
+				<tbody class="table-striped">
+					<tr v-for="expense in expenses">
+						<td>${expense.date}</td>
+						<td>${expense.detail}</td>
+						<td>${expense.place}</td>
+						<td>${expense.amount}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
-		<div v-else-if="input.type === 'income'"
-			class="row record-input no-padding">
-			<record-input
-				id="From" 
-				label="From" 
-				v-model="input.detail"
-				type="string"></record-input>
-			<record-input
-				id="Amount" 
-				label="Amount" 
-				type="currency"
-				v-model="input.amount"
-				:currency="currency"></record-input>
-		</div>
-
-		<span class="btn-floating btn-lg btn-success btn-circle float-right"
-			@click="addRecord">
-			<i class="fas fa-plus"></i>
-		</span>
-		
-		<br><br><br>
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Date</th>
-					<th>For</th>
-					<th>Place</th>
-					<th>${currency}</th>
-				</tr>
-			</thead>
-			<tbody class="table-striped">
-				<tr v-for="expense in expenses">
-					<td>${expense.date}</td>
-					<td>${expense.detail}</td>
-					<td>${expense.place}</td>
-					<td>${expense.amount}</td>
-				</tr>
-			</tbody>
-		</table>
-
 
 	</div>
 	
-	<!-- Load vue component like this -->
 	<script src="{% static 'expenses/components/BalanceDetail.vue' %}"></script>
 	<script src="{% static 'expenses/components/RecordInput.vue' %}"></script>
+	<script src="{% static 'expenses/components/Sidemenu.vue' %}"></script>
 	<script>
 		const user = {{ user | safe }}
 		const expenses = {{ expenses | safe }}
@@ -135,6 +141,10 @@
 		let vm = new Vue({
 			delimiters: ['${', '}'],
 			el: '#expense-page',
+			components: {
+				BalanceDetail,
+				RecordInput,
+			},
 			data: {
 				userId: user[0].pk,
 				firstname: capitalizeFirstLetter(user[0].fields.firstname),
@@ -162,9 +172,25 @@
 					amount: '',
 				},
 			},
-			components: {
-				BalanceDetail,
-				RecordInput,
+			computed: {
+				menuItems () {
+					return [
+						{ icon: 'home', text: 'Home', link: `/${this.userId}` },
+						{ icon: 'money-bill', text: 'Income', link: `/income/${this.userId}` },
+						{ icon: 'cart-plus', text: 'Expense', link: `/expenses/${this.userId}` },
+						{ icon: 'newspaper', text: 'Newsfeed', link: `/newsfeed/${this.userId}` },
+						{ icon: 'user', text: 'User Profile', link: `/user/${this.userId}` },
+						{ icon: 'cog', text: 'Settings', link: `/settings/${this.userId}` },
+					]
+				},
+				setMenuItems () {
+					return [
+						{ icon: 'file-alt', text: 'Category', link: `/category/${this.userId}` },
+						{ icon: 'balance-scale', text: 'Allocation', link: `/allocation/${this.userId}` },
+						{ icon: 'wallet', text: 'Saving Target', link: `/saving/${this.userId}` },
+						{ icon: 'calendar-check', text: 'Payment Reminder', link: `/payment/${this.userId}` },
+					]
+				}
 			},
 			methods: {
 				changeInputType (event) {
@@ -179,14 +205,28 @@
 						axios.post('/api/expense/', data)
 							.then(res => console.log(res))
 							.catch(err => console.log(err))
-					} 
+					}
 					else if (type === 'income') {
 						const data = { date, detail, amount, user: this.userId }
-						console.log(data)
 						axios.post('/api/income/', data)
 							.then(res => console.log(res))
 							.catch(err => console.log(err))
 					}
+				},
+				openSidemenu (id) {
+					document.getElementById(id).style.transform = 'translateX(0%)'
+					document.getElementById('background_menu_overlay').style.display = 'block'
+				},
+				closeSidemenu () {
+					if (document.getElementById('sidemenu').style.transform === 'translateX(0%)') {
+						document.getElementById('sidemenu').style.transform = 'translateX(-105%)'
+					}
+
+					if (document.getElementById('setmenu').style.transform = 'translateX(0%)') {
+						document.getElementById('setmenu').style.transform = 'translateX(105%)'
+					}
+
+					document.getElementById('background_menu_overlay').style.display = 'none'
 				}
 			},
 			mounted() {

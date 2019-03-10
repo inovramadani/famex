@@ -2,6 +2,22 @@ body {
 	margin: 20px 50px;
 }
 
+#background_menu_overlay {
+	position: fixed;
+	width: 200vh;
+	height: 200vh;
+	margin: -50vh -50vw;
+	display: none;
+	z-index: 99;
+	background-color: rgba(0,0,0,0.5);
+}
+
+.sidemenu-item:hover {
+	color: white !important;
+	background-color: #28a745 !important;
+	text-decoration: none;
+}
+
 .btn-circle {
   width: 35px;
   height: 35px;

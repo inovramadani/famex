@@ -112,7 +112,16 @@
 	<script src="{% static 'home/components/BalanceDetail.vue' %}"></script>
 	<script src="{% static 'home/components/RecordInput.vue' %}"></script>
 	<script src="{% static 'home/components/Sidemenu.vue' %}"></script>
-	<script>		
+	<script>
+		const toastOptions = {
+			position: 'bottom-center',
+			duration: 3000,
+			theme: 'toasted-primary',
+			iconPack: 'fontawesome'
+		}
+
+		Vue.use(Toasted, toastOptions)
+
 		const DEFAULT_CURRENCY = '$'
 		const DEFAULT_BALANCE = {
 			income: 0,
@@ -188,14 +197,24 @@
 						const data = { date, category, detail, place, amount, user: this.userId }
 						
 						axios.post('/api/expense/', data)
-							.then(res => console.log(res))
-							.catch(err => console.log(err))
+							.then(res => {
+								Vue.toasted.show('expense submitted', {icon: 'check-circle', type: 'success'})
+							})
+							.catch(err => {
+								Vue.toasted.show('fail to submit expense', {icon: 'times-circle', type: 'error'})
+								console.log(err)
+							})
 					}
 					else if (type === 'income') {
 						const data = { date, detail, amount, user: this.userId }
 						axios.post('/api/income/', data)
-							.then(res => console.log(res))
-							.catch(err => console.log(err))
+							.then(res => {
+								Vue.toasted.show('income submitted', {icon: 'check-circle', type: 'success'})
+							})
+							.catch(err => {
+								Vue.toasted.show('fail to submit income', {icon: 'times-circle', type: 'error'})
+								console.log(err)
+							})
 					}
 				},
 				openSidemenu (id) {

@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %} Expenses {% endblock %}
+{% block title %} Home {% endblock %}
 
 {% block content %}
-	<link rel="stylesheet" type="text/css" href="{% static 'expenses/style.css' %}">
-	<script src="{% static 'expenses/lodash.min.js' %}"></script>
-	<script src="{% static 'expenses/numeral.min.js' %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
+	<script src="{% static 'home/lodash.min.js' %}"></script>
+	<script src="{% static 'home/numeral.min.js' %}"></script>
 
 	<div id="expense-page">
 
@@ -129,14 +129,28 @@
 
 	</div>
 	
-	<script src="{% static 'expenses/components/BalanceDetail.vue' %}"></script>
-	<script src="{% static 'expenses/components/RecordInput.vue' %}"></script>
-	<script src="{% static 'expenses/components/Sidemenu.vue' %}"></script>
-	<script>
+	<script src="{% static 'home/components/BalanceDetail.vue' %}"></script>
+	<script src="{% static 'home/components/RecordInput.vue' %}"></script>
+	<script src="{% static 'home/components/Sidemenu.vue' %}"></script>
+	<script>		
+		const DEFAULT_CURRENCY = '$'
+		const DEFAULT_BALANCE = {
+			income: 0,
+			expense: 0,
+			rest: 0,
+			saving: 0,
+		}
+
 		const user = {{ user | safe }}
 		const expenses = {{ expenses | safe }}
 		const balance = {{ balance | safe }}
-		const newBalance = _.omit(balance[0].fields, ['user', 'currency'])
+		
+		let newBalance = DEFAULT_BALANCE
+		let currency = DEFAULT_CURRENCY
+		if (balance.length > 0) {
+			newBalance = _.omit(balance[0].fields, ['user', 'currency'])
+			currency = balance[0].fields.currency
+		}
 
 		let vm = new Vue({
 			delimiters: ['${', '}'],
@@ -149,7 +163,7 @@
 				userId: user[0].pk,
 				firstname: capitalizeFirstLetter(user[0].fields.firstname),
 				lastname: capitalizeFirstLetter(user[0].fields.lastname),
-				currency: balance[0].fields.currency,
+				currency: currency,
 				balance: newBalance,
 				balanceText: numberValuesToStringWithThousandsSeparator(newBalance),
 				categoryItems: ['food', 'clean', 'transport'],
@@ -177,7 +191,7 @@
 					return [
 						{ icon: 'home', text: 'Home', link: `/${this.userId}` },
 						{ icon: 'money-bill', text: 'Income', link: `/income/${this.userId}` },
-						{ icon: 'cart-plus', text: 'Expense', link: `/expenses/${this.userId}` },
+						{ icon: 'cart-plus', text: 'Expense', link: `/home/${this.userId}` },
 						{ icon: 'piggy-bank', text: 'Saving', link: `/saving/${this.userId}` },
 						{ icon: 'credit-card', text: 'Debt', link: `/debt/${this.userId}` },
 						{ icon: 'newspaper', text: 'Newsfeed', link: `/newsfeed/${this.userId}` },

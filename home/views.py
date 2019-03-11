@@ -17,4 +17,4 @@ def index(request, user_id):
 		'expenses': serializers.serialize('json', expenses),
 		'balance': serializers.serialize('json', balance),
 	}
-	return render(request, 'expenses/index.html', context)
+	return render(request, 'home/index.html', context)

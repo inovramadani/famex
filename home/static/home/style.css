@@ -67,7 +67,7 @@ body {
 	text-align: right;
 }
 
-#expense-page .record-input {
+.record-input {
 	display: flex;
 	flex-flow: column;
 	justify-content: space-between;

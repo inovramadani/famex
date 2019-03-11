@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Expense {% endblock %}
+
+{% block content %}
+	<link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'expense/style.css' %}">
+	<script src="{% static 'home/lodash.min.js' %}"></script>
+	<script src="{% static 'home/numeral.min.js' %}"></script>
+
+	<div id="expense-page">
+		<side-menu id="sidemenu" :items="menuItems" :onright="false"></side-menu>
+		<side-menu id="setmenu" :items="setMenuItems" :onright="true"></side-menu>
+
+		<span @click="openSidemenu('sidemenu')"><i class="fas fa-bars float-left"></i></span>
+		<span @click="openSidemenu('setmenu')"><i class="fas fa-ellipsis-v float-right"></i></span>
+		<div class="title">
+			<strong class="title-text">FAMEX</strong>
+		</div>
+
+		<div class="main" @click="closeSidemenu">
+			<div id="background_menu_overlay"></div>
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>For</th>
+						<th>Place</th>
+						<th>${currency}</th>
+					</tr>
+				</thead>
+				<tbody class="table-striped">
+					<tr v-for="expense in expenses">
+						<td>${expense.date}</td>
+						<td>${expense.detail}</td>
+						<td>${expense.place}</td>
+						<td>${expense.amount}</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+	
+	</div>
+
+	<script src="{% static 'home/components/Sidemenu.vue' %}"></script>
+	<script>
+		const user = {{ user | safe }}
+		const expenses = {{ expenses | safe }}
+
+		let vm = new Vue({
+			delimiters: ['${', '}'],
+			el: '#expense-page',
+			components: {
+
+			},
+			data: {
+				userId: user[0].pk,
+				expenses: expenses.map(expense => {
+					const date = new Date(expense.fields.date)
+					return ({
+						date: date.toLocaleDateString(),
+						category: expense.fields.category,
+						detail: expense.fields.detail,
+						place: expense.fields.place,
+						amount: expense.fields.amount,
+					})
+				}),
+				currency: `{{ currency | safe }}`,
+			},
+			computed: {
+				menuItems () {
+					return [
+						{ icon: 'home', text: 'Home', link: `/${this.userId}` },
+						{ icon: 'money-bill', text: 'Income', link: `/income/${this.userId}` },
+						{ icon: 'cart-plus', text: 'Expense', link: `/expense/${this.userId}` },
+						{ icon: 'piggy-bank', text: 'Saving', link: `/saving/${this.userId}` },
+						{ icon: 'credit-card', text: 'Debt', link: `/debt/${this.userId}` },
+						{ icon: 'newspaper', text: 'Newsfeed', link: `/newsfeed/${this.userId}` },
+						{ icon: 'user', text: 'User Profile', link: `/user/${this.userId}` },
+						{ icon: 'cog', text: 'Settings', link: `/settings/${this.userId}` },
+					]
+				},
+				setMenuItems () {
+					return [
+						{ icon: 'th-list', text: 'Category', link: `/category/${this.userId}` },
+						{ icon: 'chart-pie', text: 'Allocation', link: `/allocation/${this.userId}` },
+						{ icon: 'wallet', text: 'Saving Target', link: `/saving-target/${this.userId}` },
+						{ icon: 'calendar-check', text: 'Payment Reminder', link: `/payment/${this.userId}` },
+					]
+				}
+			},
+			methods: {
+				openSidemenu (id) {
+					document.getElementById(id).style.transform = 'translateX(0%)'
+					document.getElementById('background_menu_overlay').style.display = 'block'
+				},
+				closeSidemenu () {
+					if (document.getElementById('sidemenu').style.transform === 'translateX(0%)') {
+						document.getElementById('sidemenu').style.transform = 'translateX(-105%)'
+					}
+
+					if (document.getElementById('setmenu').style.transform = 'translateX(0%)') {
+						document.getElementById('setmenu').style.transform = 'translateX(105%)'
+					}
+
+					document.getElementById('background_menu_overlay').style.display = 'none'
+				}
+			},
+		})
+		
+	</script>
+{% endblock %}

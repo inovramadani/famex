@@ -18,8 +18,10 @@ from django.urls import path, include
 from home.routers import router
 
 urlpatterns = [
-	# path('login/', include('login.urls')),
-	path('', include('home.urls')),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('', include('home.urls')),
+    # path('login/', include('login.urls')),
+    # path('income/', include('income.urls')),
+    path('expense/', include('expense.urls')),
 ] 

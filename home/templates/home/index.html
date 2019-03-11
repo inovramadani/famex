@@ -8,7 +8,7 @@
 	<script src="{% static 'home/lodash.min.js' %}"></script>
 	<script src="{% static 'home/numeral.min.js' %}"></script>
 
-	<div id="expense-page">
+	<div id="homepage">
 
 		<side-menu id="sidemenu" :items="menuItems" :onright="false"></side-menu>
 		<side-menu id="setmenu" :items="setMenuItems" :onright="true"></side-menu>
@@ -105,26 +105,6 @@
 				@click="addRecord">
 				<i class="fas fa-plus"></i>
 			</span>
-			
-			<br><br><br>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Date</th>
-						<th>For</th>
-						<th>Place</th>
-						<th>${currency}</th>
-					</tr>
-				</thead>
-				<tbody class="table-striped">
-					<tr v-for="expense in expenses">
-						<td>${expense.date}</td>
-						<td>${expense.detail}</td>
-						<td>${expense.place}</td>
-						<td>${expense.amount}</td>
-					</tr>
-				</tbody>
-			</table>
 		</div>
 
 	</div>
@@ -142,7 +122,6 @@
 		}
 
 		const user = {{ user | safe }}
-		const expenses = {{ expenses | safe }}
 		const balance = {{ balance | safe }}
 		
 		let newBalance = DEFAULT_BALANCE
@@ -154,7 +133,7 @@
 
 		let vm = new Vue({
 			delimiters: ['${', '}'],
-			el: '#expense-page',
+			el: '#homepage',
 			components: {
 				BalanceDetail,
 				RecordInput,
@@ -167,16 +146,6 @@
 				balance: newBalance,
 				balanceText: numberValuesToStringWithThousandsSeparator(newBalance),
 				categoryItems: ['food', 'clean', 'transport'],
-				expenses: expenses.map(expense => {
-					const date = new Date(expense.fields.date)
-					return ({
-						date: date.toLocaleDateString(),
-						category: expense.fields.category,
-						detail: expense.fields.detail,
-						place: expense.fields.place,
-						amount: expense.fields.amount,
-					})
-				}),
 				input: {
 					type: 'expense',
 					date: formatDate(new Date()),
@@ -191,7 +160,7 @@
 					return [
 						{ icon: 'home', text: 'Home', link: `/${this.userId}` },
 						{ icon: 'money-bill', text: 'Income', link: `/income/${this.userId}` },
-						{ icon: 'cart-plus', text: 'Expense', link: `/home/${this.userId}` },
+						{ icon: 'cart-plus', text: 'Expense', link: `/expense/${this.userId}` },
 						{ icon: 'piggy-bank', text: 'Saving', link: `/saving/${this.userId}` },
 						{ icon: 'credit-card', text: 'Debt', link: `/debt/${this.userId}` },
 						{ icon: 'newspaper', text: 'Newsfeed', link: `/newsfeed/${this.userId}` },
@@ -281,5 +250,3 @@
 		
 	</script>
 {% endblock %}
-
-		

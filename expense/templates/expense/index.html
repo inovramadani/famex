@@ -6,8 +6,6 @@
 {% block content %}
 	<link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'expense/style.css' %}">
-	<script src="{% static 'home/lodash.min.js' %}"></script>
-	<script src="{% static 'home/numeral.min.js' %}"></script>
 
 	<div id="expense-page">
 		<side-menu id="sidemenu" :items="menuItems" :onright="false"></side-menu>

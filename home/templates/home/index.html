@@ -216,6 +216,18 @@
 								console.log(err)
 							})
 					}
+
+					this.resetInput()
+				},
+				resetInput () {
+					this.input = {
+						type: this.input.type,
+						date: formatDate(new Date()),
+						category: '',
+						detail: '',
+						place: '',
+						amount: '',
+					}
 				},
 				openSidemenu (id) {
 					document.getElementById(id).style.transform = 'translateX(0%)'

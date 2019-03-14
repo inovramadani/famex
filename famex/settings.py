@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from .db_config import DB_CONFIG
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -84,15 +85,12 @@ WSGI_APPLICATION = 'famex.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'famex',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres478',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-        # 'OPTIONS': {
-        #     'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
-        # },
+        'ENGINE': DB_CONFIG['ENGINE'],
+        'NAME': DB_CONFIG['NAME'],
+        'USER': DB_CONFIG['USER'],
+        'PASSWORD': DB_CONFIG['PASSWORD'],
+        'HOST': DB_CONFIG['HOST'],
+        'PORT': DB_CONFIG['PORT']
     }
 }
 

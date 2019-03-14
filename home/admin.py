@@ -15,6 +15,6 @@ class UserAdmin(admin.ModelAdmin):
 		(None, {'fields' : ['firstname']}),
 		(None, {'fields' : ['lastname']})
 	]
-	inlines = [ExpenseInline, BalanceInline]
+	inlines = [BalanceInline, ExpenseInline]
 
 admin.site.register(User, UserAdmin)

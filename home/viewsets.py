@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import User, Expense, Income
-from .serializers import UserSerializer, ExpenseSerializer, IncomeSerializer
+from .models import User, Expense, Income, Balance
+from .serializers import UserSerializer, ExpenseSerializer, IncomeSerializer, BalanceSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
@@ -13,3 +13,7 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 class IncomeViewSet(viewsets.ModelViewSet):
 	queryset = Income.objects.all()
 	serializer_class = IncomeSerializer
+
+class BalanceViewSet(viewsets.ModelViewSet):
+	queryset = Balance.objects.all()
+	serializer_class = BalanceSerializer
